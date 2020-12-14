@@ -30,11 +30,11 @@ public:
     }
 
     Type& operator[](size_t index) noexcept {
-        return *(raw_ptr_ + index);
+        return raw_ptr_[index];
     }
 
     const Type& operator[](size_t index) const noexcept {
-        return *(raw_ptr_ + index);
+        return raw_ptr_[index];
     }
 
     explicit operator bool() const {
@@ -45,7 +45,7 @@ public:
         return raw_ptr_;
     }
 
-    void swap(ArrayPtr& other) noexcept {
+    void Swap(ArrayPtr& other) noexcept {
         Type* const tmp = raw_ptr_;
         raw_ptr_ = other.raw_ptr_;
         other.raw_ptr_ = tmp;

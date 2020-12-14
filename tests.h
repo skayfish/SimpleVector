@@ -191,8 +191,8 @@ inline void Test2() {
         const size_t size1 = v1.GetSize();
         const size_t size2 = v2.GetSize();
 
-        static_assert(noexcept(v1.swap(v2)));
-        v1.swap(v2);
+        static_assert(noexcept(v1.Swap(v2)));
+        v1.Swap(v2);
         assert(&v2[0] == begin1);
         assert(&v1[0] == begin2);
         assert(v1.GetSize() == size2);

@@ -66,16 +66,17 @@ public:
 
         std::copy(other.begin(), other.end(), begin());
         size_ = other.size_;
+        capacity_ = other.capacity_;
     }
 
     SimpleVector(SimpleVector&& other) noexcept {
-        swap(other);
+        Swap(other);
     }
 
     SimpleVector& operator=(const SimpleVector& rhs) {
         if (this != &rhs) {
             SimpleVector<Type> tmp(rhs);
-            swap(tmp);
+            Swap(tmp);
         }
 
         return *this;
@@ -83,7 +84,7 @@ public:
 
     SimpleVector& operator=(SimpleVector&& rhs) noexcept {
         SimpleVector<Type> tmp(std::move(rhs));
-        swap(tmp);
+        Swap(tmp);
 
         return *this;
     }
@@ -97,13 +98,18 @@ public:
         if (new_capacity > capacity_) {
             ArrayPtr<Type> new_array_ptr(new_capacity);
             std::fill(new_array_ptr.Get(), new_array_ptr.Get() + new_capacity, Type());
-            std::copy(begin(), end(), new_array_ptr.Get());
-            items_.swap(new_array_ptr);
+            std::copy(std::make_move_iterator(begin()), std::make_move_iterator(end()), new_array_ptr.Get());
+            items_.Swap(new_array_ptr);
             capacity_ = new_capacity;
         }
     }
 
-    void PushBack(Type item) {
+    void PushBack(const Type& item) {
+        auto item_copy = item;
+        PushBack(std::move(item_copy));
+    }
+
+    void PushBack(Type&& item) {
         if (size_ < capacity_) {
             items_[size_] = std::move(item);
             ++size_;
@@ -112,13 +118,18 @@ public:
             ArrayPtr<Type> new_array_ptr(new_capacity);
             std::copy(std::make_move_iterator(begin()), std::make_move_iterator(end()), new_array_ptr.Get());
             new_array_ptr[size_] = std::move(item);
-            new_array_ptr.swap(items_);
+            new_array_ptr.Swap(items_);
             size_++;
             capacity_ = new_capacity;
         }
     }
 
-    Iterator Insert(ConstIterator pos, Type value) {
+    Iterator Insert(ConstIterator pos, const Type& value) {
+        auto value_copy = value;
+        return Insert(pos, std::move(value_copy));
+    }
+
+    Iterator Insert(ConstIterator pos, Type&& value) {
         Iterator result;
         size_t index = pos - begin();
         if (size_ < capacity_) {
@@ -134,7 +145,7 @@ public:
             new_array_ptr[index] = std::move(value);
             std::copy(std::make_move_iterator(&items_[index]), std::make_move_iterator(end()), new_array_ptr.Get() + index + 1);
 
-            new_array_ptr.swap(items_);
+            new_array_ptr.Swap(items_);
             result = &items_[index];
             size_++;
             capacity_ = new_capacity;
@@ -158,8 +169,8 @@ public:
         return result;
     }
 
-    void swap(SimpleVector& other) noexcept {
-        items_.swap(other.items_);
+    void Swap(SimpleVector& other) noexcept {
+        items_.Swap(other.items_);
         std::swap(size_, other.size_);
         std::swap(capacity_, other.capacity_);
     }
@@ -218,9 +229,9 @@ public:
             ArrayPtr<Type> new_array(new_capacity);
 
             std::fill(new_array.Get(), new_array.Get() + new_capacity, Type());
-            std::copy(begin(), end(), new_array.Get());
+            std::copy(std::make_move_iterator(begin()), std::make_move_iterator(end()), new_array.Get());
 
-            new_array.swap(items_);
+            new_array.Swap(items_);
             size_ = new_size;
             capacity_ = new_capacity;
         }
