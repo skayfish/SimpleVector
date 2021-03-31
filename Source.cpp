@@ -3,19 +3,19 @@
 using namespace std;
 
 int main() {
-    Test1();
-    Test2();
-    TestReserveConstructor();
-    TestReserveMethod();
+	Test1();
+	Test2();
+	TestReserveConstructor();
+	TestReserveMethod();
 
-    TestTemporaryObjConstructor();
-    TestTemporaryObjOperator();
-    TestNamedMoveConstructor();
-    TestNamedMoveOperator();
-    TestNoncopiableMoveConstructor();
-    TestNoncopiablePushBack();
-    TestNoncopiableInsert();
-    TestNoncopiableErase();
+	TestTemporaryObjConstructor();
+	TestTemporaryObjOperator();
+	TestNamedMoveConstructor();
+	TestNamedMoveOperator();
+	TestNoncopiableMoveConstructor();
+	TestNoncopiablePushBack();
+	TestNoncopiableInsert();
+	TestNoncopiableErase();
 
-    return 0;
+	return 0;
 }
